@@ -42,7 +42,7 @@ Total: 535.75
 
 ### `monthly.py`
 
-`monthly.py` summarises all the purchases during the previous month.
+`monthly.py` summarises all the purchases during the _previous_ month.
 
 `./monthly.py email` will send you an email and is designed to be run by cron on the first night of every month.
 
