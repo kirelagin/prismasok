@@ -39,6 +39,7 @@ Total: 535.75
 ~~~~~~~~~
 
 `./daily.py email` will send you an email and is designed to be run by cron in the evening.
+No email will be sent if there were no purchases.
 
 ### `monthly.py`
 
