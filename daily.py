@@ -10,7 +10,7 @@ from prismasok.util import load_credentials, sorted_items, print_items, total
 
 cardno, password = load_credentials()
 p = prisma.Prisma(cardno, password)
-ps = p.purchases(date(2014,5,7))
+ps = p.purchases(date.today())
 
 if len(ps) > 0:
     n = init(email=EmailNotify('Prisma'))
