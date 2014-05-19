@@ -23,7 +23,7 @@ class Prisma:
         self.s = requests.Session()
 
         r = self.s.post(self.DOMAIN + self.LOGIN_URI,
-                        data={'CardNum': cardNum, 'Password': password})
+                        data={'CardNum': cardNum, 'Password': password}, timeout=5)
         if r.url == self.DOMAIN + self.LOGIN_URI:
             raise ValueError('Failed to authenticate')
 
@@ -32,7 +32,7 @@ class Prisma:
             endDate = startDate
 
         r = self.s.post(self.DOMAIN + self.PURCHASES_URI,
-                        data={'startDate': startDate.strftime(self.PURCHASES_DATE_FORMAT), 'endDate': endDate.strftime(self.PURCHASES_DATE_FORMAT)})
+                        data={'startDate': startDate.strftime(self.PURCHASES_DATE_FORMAT), 'endDate': endDate.strftime(self.PURCHASES_DATE_FORMAT)}, timeout=5)
         soup = BeautifulSoup(r.text, from_encoding=self.ENCODING)
 
         tables = soup('table', self.ITEMS_TABLE_CLASS)
@@ -79,7 +79,7 @@ class Items:
     def __init__(self, prisma, uri):
         self._prisma = prisma
 
-        r = prisma.s.get(prisma.DOMAIN + uri)
+        r = prisma.s.get(prisma.DOMAIN + uri, timeout=5)
         soup = BeautifulSoup(r.text, from_encoding=prisma.ENCODING)
 
         rows = soup.table(lambda tag: tag.name == 'tr' and tag.th is None)
