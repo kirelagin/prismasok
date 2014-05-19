@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from datetime import date
+from datetime import date, timedelta
 
 from notifier import init, plural
 from notifier.providers import EmailNotify
@@ -10,12 +10,12 @@ from prismasok.util import load_credentials, sorted_items, print_items, total
 
 cardno, password = load_credentials()
 p = prisma.Prisma(cardno, password)
-ps = p.purchases(date.today())
+ps = p.purchases(date.today() - timedelta(days=1))
 
 if len(ps) > 0:
     n = init(email=EmailNotify('Prisma'))
     with n:
-        n.subject = 'Prisma: {} purchase{s} today'.format(len(ps), s=plural(len(ps)))
+        n.subject = 'Prisma: {} purchase{s} yesterday'.format(len(ps), s=plural(len(ps)))
         for i, p in enumerate(ps, 1):
             data = sorted_items(p.items.data)
             print('Purchase #{}:'.format(i))

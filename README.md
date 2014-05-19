@@ -20,7 +20,7 @@ Shipped scripts
 
 ### `daily.py`
 
-`daily.py` gathers information about purchases during the day.
+`daily.py` gathers information about purchases during the _previous_ day.
 
 ~~~~~~~~ShellSession
 % ./daily.py  
@@ -38,14 +38,18 @@ Purchase #1:
 Total: 535.75
 ~~~~~~~~~
 
-`./daily.py email` will send you an email and is designed to be run by cron in the evening.
+`./daily.py email` will send you an email and is designed to be run by cron in the morning.
 No email will be sent if there were no purchases.
+
+_NOTE:_ Prisma guys are updating their database once a day around 00:00 EET (that is, 22:00 UTC).
+During this time their servers do not respond (they go down around 23:50 EET and get back up around 00:30 EET).
+As a consequence, unfortunately it makes no sense to run `daily.py` in the evening.
 
 ### `monthly.py`
 
 `monthly.py` summarises all the purchases during the _previous_ month.
 
-`./monthly.py email` will send you an email and is designed to be run by cron on the first night of every month.
+`./monthly.py email` will send you an email and is designed to be run by cron on the first morning of every month.
 
 
 Requirements
