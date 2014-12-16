@@ -37,7 +37,7 @@ class Prisma:
 
         tables = soup('table', self.ITEMS_TABLE_CLASS)
         rows = [r for t in tables for r in t('tr')[1:]]
-        return [Purchase.from_row(self, row) for row in rows]
+        return [Purchase.from_row(self, row) for row in rows[:-1]]
 
     def total_items(self, startDate, endDate):
         return Items(self, self.TOTAL_URI.format(startDate=startDate.strftime(self.TOTAL_DATE_FORMAT), endDate=endDate.strftime(self.TOTAL_DATE_FORMAT)))
@@ -54,8 +54,8 @@ class Purchase:
 
     @classmethod
     def from_row(cls, prisma, row):
-        u, d, t = row('td')
-        return cls(prisma, u.a['href'], datetime.strptime(d.text, prisma.PURCHASES_DATE_FORMAT).date(), Decimal(t.text))
+        u, d, t, _ = row('td')
+        return cls(prisma, u.a['href'], datetime.strptime(d.text, prisma.PURCHASES_DATE_FORMAT).date(), Decimal(t.text.replace(',', '')))
 
     def __repr__(self):
         return '<Purchase date={}, total={}>'.format(self.date, self.total)
@@ -82,8 +82,8 @@ class Items:
         r = prisma.s.get(prisma.DOMAIN + uri, timeout=5)
         soup = BeautifulSoup(r.text, from_encoding=prisma.ENCODING)
 
-        rows = soup.table(lambda tag: tag.name == 'tr' and tag.th is None)
-        items = [(n.text.strip(), Decimal(v.text)) for n, v in [r('td') for r in rows]]
+        rows = soup('tr')
+        items = [(n.text.strip(), Decimal(v.text.replace(',', ''))) for n, _, v, _ in [r('td') for r in rows]]
         self._data = items
 
     @property
